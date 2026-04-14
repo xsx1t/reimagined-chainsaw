@@ -1,42 +1,39 @@
 <!DOCTYPE html>
-<html ng-app="myApp">
+<html>
 <head>
   <title>YouTube Video</title>
   <style>
-    body { text-align: center; margin-top: 20px; }
-    .video-container {
-      position: relative;
-      width: 80%;
-      max-width: 800px;
-      margin: 0 auto;
-      height: 0;
-      padding-bottom: 56.25%;
-    }
-    .video-container > div {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-    }
+    #player { width: 80%; max-width: 800px; margin: 20px auto; }
+    button { display: block; margin: 10px auto; }
   </style>
 </head>
-<body ng-controller="MyCtrl">
+<body>
+  <div id="player"></div>
+  <button onclick="play()">Play</button>
+  <button onclick="pause()">Pause</button>
 
-  <h2>My Video</h2>
-  <div class="video-container">
-    <youtube-video video-id="videoId" player="player"></youtube-video>
-  </div>
-
-  <button ng-click="player.playVideo()">Play</button>
-  <button ng-click="player.pauseVideo()">Pause</button>
-
-  <!-- Load scripts in order -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="https://cdn.jsdelivr.net/npm/angular-youtube-embed@4.2.3/dist/angular-youtube-embed.min.js"></script>
   <script>
-    angular.module('myApp', ['youtube-embed'])
-      .controller('MyCtrl', function($scope) {
-        $scope.videoId = 's8rI4D_Kuqw';
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: 's8rI4D_Kuqw',
+        playerVars: { 'autoplay': 0, 'controls': 1 },
+        events: { 'onReady': onPlayerReady }
       });
+    }
+
+    function onPlayerReady() {
+      console.log("Player ready");
+    }
+
+    function play() { player.playVideo(); }
+    function pause() { player.pauseVideo(); }
+
+    // Load YouTube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script');
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   </script>
 </body>
 </html>   
